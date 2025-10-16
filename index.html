@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Plan Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(to right, #6a11cb, #2575fc); color: white; }
+        h1 { text-align: center; padding: 20px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; }
+        input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+        input { width: calc(100% - 22px); }
+        .task-list { list-style: none; padding: 0; }
+        .task { display: flex; justify-content: space-between; padding: 5px; background: rgba(255, 255, 255, 0.2); margin-top: 10px; border-radius: 5px; }
+        .progress { margin: 40px 0; }
+        .chart { width: 100%; height: 300px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; position: relative; }
+        .progress-bar { height: 100%; background: #4caf50; position: absolute; bottom: 0; }
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            input { width: calc(100% - 16px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Study Plan Tracker</h1>
+        <label for="goal">Set Daily Study Goal (hours):</label>
+        <input type="number" id="goal" placeholder="Enter hours">
+        <label for="task">Add Study Task:</label>
+        <input type="text" id="task" placeholder="Enter task">
+        <button onclick="addTask()">Add Task</button>
+        <h2>Your Tasks</h2>
+        <ul class="task-list" id="taskList"></ul>
+        <div class="progress">
+            <h3>Study Progress:</h3>
+            <div class="chart"><div class="progress-bar" id="progressBar" style="width: 0%;"></div></div>
+            <p id="progressText">0 hours studied out of <span id="dailyGoal">0</span> hours.</p>
+        </div>
+    </div>
+    <script>
+        let tasks = []; // Array to hold tasks
+        let totalHoursStudied = 0; // Total hours studied
+        let dailyGoal = 0;         // Daily Goal
+
+        // Function to add a task
+        function addTask() {
+            const taskInput = document.getElementById('task');
+            const goalInput = document.getElementById('goal');
+            if (taskInput.value) {
+                tasks.push(taskInput.value);
+                renderTasks();
+                taskInput.value = '';
+            }
+            dailyGoal = parseInt(goalInput.value) || 0;
+            document.getElementById('dailyGoal').innerText = dailyGoal;
+            updateProgress();
+        }
+
+        // Function to render tasks in the UI
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'task';
+                li.innerHTML = `${task} <button onclick='removeTask(${index})'>Remove</button>`;
+                taskList.appendChild(li);
+            });
+        }
+
+        // Function to remove a task
+        function removeTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        // Function to update progress
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            totalHoursStudied = tasks.length; // Assume 1 hour per task for simplicity
+            const progressPercentage = (totalHoursStudied / dailyGoal) * 100 || 0;
+            progressBar.style.width = progressPercentage + '%';
+            progressText.innerText = totalHoursStudied + ' hours studied out of ' + dailyGoal + ' hours.';
+        }
+    </script>
+</body>
+</html>
