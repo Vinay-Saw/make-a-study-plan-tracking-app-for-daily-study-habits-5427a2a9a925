@@ -29,18 +29,23 @@
         <label for="task">Add Study Task:</label>
         <input type="text" id="task" placeholder="Enter task">
         <button onclick="addTask()">Add Task</button>
+        <label for="reminder">Set Reminder:</label>
+        <input type="time" id="reminder">
+        <button onclick="setReminder()">Set Reminder</button>
         <h2>Your Tasks</h2>
         <ul class="task-list" id="taskList"></ul>
         <div class="progress">
             <h3>Study Progress:</h3>
             <div class="chart"><div class="progress-bar" id="progressBar" style="width: 0%;"></div></div>
             <p id="progressText">0 hours studied out of <span id="dailyGoal">0</span> hours.</p>
+            <p id="reminderText"></p>
         </div>
     </div>
     <script>
         let tasks = []; // Array to hold tasks
         let totalHoursStudied = 0; // Total hours studied
-        let dailyGoal = 0;         // Daily Goal
+        let dailyGoal = 0; // Daily Goal
+        let reminderTime = ''; // Reminder Time
 
         // Function to add a task
         function addTask() {
@@ -72,6 +77,7 @@
         function removeTask(index) {
             tasks.splice(index, 1);
             renderTasks();
+            updateProgress();
         }
 
         // Function to update progress
@@ -82,6 +88,16 @@
             const progressPercentage = (totalHoursStudied / dailyGoal) * 100 || 0;
             progressBar.style.width = progressPercentage + '%';
             progressText.innerText = totalHoursStudied + ' hours studied out of ' + dailyGoal + ' hours.';
+        }
+
+        // Function to set reminder
+        function setReminder() {
+            const reminderInput = document.getElementById('reminder');
+            reminderTime = reminderInput.value;
+            document.getElementById('reminderText').innerText = `Reminder set for ${reminderTime}`;
+            reminderInput.value = '';
+            // Set reminder logic (for demo purposes we won't implement real reminders here)
+            alert(`Reminder set for ${reminderTime}!`);
         }
     </script>
 </body>
